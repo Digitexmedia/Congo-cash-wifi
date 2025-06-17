@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Congo Cash WiFi Dashboard</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      background: #f4f7fc;
+      font-family: 'Nunito', sans-serif;
+      color: #333;
+    }
+
+    .credit-card {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-logo {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    .card-number {
+      font-size: 18px;
+      margin-top: 10px;
+    }
+
+    .card-holder, .card-expiry, .card-balance {
+      margin-top: 10px;
+      font-size: 16px;
+    }
+
+    .plan-table td {
+      padding: 4px 8px;
+      font-size: 14px;
+    }
+
+    .home-card {
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(0,0,0,0.08);
+    }
+
+    .card-header {
+      background: #2575fc;
+      color: white;
+      padding: 12px 20px;
+      cursor: pointer;
+    }
+
+    .bg-purple-main {
+      background: #6a11cb !important;
+    }
+
+    .bg-accent-one {
+      background: #1abc9c !important;
+    }
+
+    .bg-accent-two {
+      background: #f39c12 !important;
+    }
+
+    .round-btn {
+      border-radius: 30px;
+      font-weight: bold;
+      padding: 10px 20px;
+    }
+
+    .btn-primary.bg-green-bright {
+      background-color: #2ecc71;
+      border: none;
+    }
+
+    .connect-card a {
+      text-decoration: none;
+      font-size: 16px;
+    }
+
+    .loader svg {
+      width: 18px;
+      height: 18px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    .text-white {
+      color: white;
+    }
+
+    .font-weight-bold {
+      font-weight: 700;
+    }
+
+    footer {
+      margin-top: 60px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container py-4">
+    <div class="row">
+      <!-- Wallet -->
+      <div class="col-sm-4 mt-3" id="wallet_balance" style="display:none">
+        <div class="credit-card">
+          <div class="card-logo">Congo Cash WiFi</div>
+          <div class="card-number" id="card_account">1234 5678 9012 3456</div>
+          <div class="card-holder" id="card_name">Cardholder Name</div>
+          <div class="card-expiry" id="card_joined">Joined: 12/24</div>
+          <div class="card-balance" id="card_balance">Balance: KES 1000</div>
+        </div>
+      </div>
+
+      <!-- Plan Info -->
+      <div class="col-sm-8 mt-3" id="active_voucher_section">
+        <div class="card">
+          <div class="card-body text-center p-3">
+            <img class="mb-2" src="img/wifi.png" style="width: 50px;" />
+            <div id="no_plans" class="d-none mt-3">
+              <h5>You have 0.0 MBs, 0 Minutes.</h5>
+              <p>Please buy a plan to enjoy browsing.</p>
+            </div>
+            <div id="has_plans" class="d-none">
+              <table class="table plan-table">
+                <tr><td>Plan:</td><td id="plan_name">Plan A</td></tr>
+                <tr><td>Data used:</td><td id="plan_data_used">0 MB</td></tr>
+                <tr><td>Time used:</td><td id="plan_time_used">0 min</td></tr>
+                <tr><td>Data remaining:</td><td id="plan_data_remain">1 GB</td></tr>
+                <tr><td>Expires on:</td><td id="plan_expiry">Tomorrow</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Buy Button -->
+    <div class="text-center connect-card mt-4">
+      <a href="plans.html" class="btn btn-primary bg-green-bright round-btn">
+        Buy Internet Bundle
+      </a>
+    </div>
+
+    <!-- Profile & Edit Sections -->
+    <div class="row">
+      <div class="col-sm-6">
+        <!-- Profile -->
+        <div class="card mt-4 home-card">
+          <div class="card-header bg-purple-main" data-toggle="collapse" href="#profile_details">
+            <h6 class="mb-0">My Profile</h6>
+          </div>
+          <div class="collapse" id="profile_details">
+            <div class="card-body">
+              <table class="table">
+                <tr><td>Username</td><td id="auth_username">user123</td></tr>
+                <tr><td>Name</td><td id="auth_name">John Doe</td></tr>
+                <tr><td>Email</td><td id="auth_email">email@example.com</td></tr>
+                <tr><td>Phone</td><td id="auth_phone">+254700000000</td></tr>
+                <tr><td>Joined</td><td id="auth_joined">2024-01-01</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Edit Profile -->
+        <div class="card mt-4 home-card">
+          <div class="card-header bg-accent-two" data-toggle="collapse" href="#profile_edit">
+            <h6 class="mb-0">Edit Profile</h6>
+          </div>
+          <div class="collapse" id="profile_edit">
+            <div class="card-body">
+              <input id="edit_name" class="form-control mb-2" placeholder="Name" />
+              <input id="edit_email" type="email" class="form-control mb-2" placeholder="Email" />
+              <button class="btn btn-primary bg-accent-one round-btn btn-block">Save Changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <!-- Password -->
+        <div class="card mt-4 home-card">
+          <div class="card-header bg-accent-one" data-toggle="collapse" href="#password_edit">
+            <h6 class="mb-0">Change Your Password</h6>
+          </div>
+          <div class="collapse" id="password_edit">
+            <div class="card-body">
+              <input class="form-control mb-2" type="password" placeholder="Old Password" />
+              <input class="form-control mb-2" type="password" placeholder="New Password" />
+              <input class="form-control mb-2" type="password" placeholder="Confirm Password" />
+              <button class="btn btn-primary bg-accent-one round-btn btn-block">Change Password</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Purchased Plans -->
+        <div class="card mt-4 home-card">
+          <div class="card-header bg-purple-main" data-toggle="collapse" href="#purchased_plans">
+            <h6 class="mb-0">My Purchased Plans</h6>
+          </div>
+          <div class="collapse" id="purchased_plans">
+            <div class="card-body">
+              <table class="table">
+                <thead><tr><th>Name</th><th>Balance</th><th>Expiry</th></tr></thead>
+                <tbody id="purchased_plans_body">
+                  <tr><td>Daily 500MB</td><td>450MB</td><td>Tomorrow</td></tr>
+                  <tr><td>Night Plan</td><td>1.2GB</td><td>2025-06-20</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-muted mt-5">
+      <p class="font-weight-bold text-dark">© 2025 CONGO CASH WIFI</p>
+    </footer>
+  </div>
+
+  <!-- JS Dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+                  </html>
